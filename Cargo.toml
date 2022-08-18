@@ -1,0 +1,29 @@
+[package]
+name = "axum"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+axum = { version = "0.5.15", features = ["multipart"]}
+tokio = {version = "1.20.1", features = ["full"]}
+sqlx = { version = "0.6.1", features = ["runtime-tokio-native-tls", "postgres"]}
+tower = { version = "0.4", features = ["util"]}
+tower-http = {version = "0.3.4", featuress = ["cors"]}
+tracing-subscriber = {version = "0.3.15", features = ["env-filter"]}
+serde = {version = "1.0.143", features = ["derive"]}
+serde_json = "1.0.83"
+tracing = "0.1.36"
+anyhow = "1.0"
+thiserror = "1.0"
+dotenv = "0.15.0"
+mockall = "0.11.2"
+async-trait = "0.1"
+image = "0.24"
+kamadak-exif = "0.5.4"
+uuid = {version = "1.1.2", features = ["serde", "v4"]}
+
+
+[dev-dependencies]
+hyper = "0.14.20"
