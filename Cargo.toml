@@ -10,7 +10,7 @@ axum = { version = "0.5.15", features = ["multipart"]}
 tokio = {version = "1.20.1", features = ["full"]}
 sqlx = { version = "0.6.1", features = ["runtime-tokio-native-tls", "postgres"]}
 tower = { version = "0.4", features = ["util"]}
-tower-http = {version = "0.3.4", featuress = ["cors"]}
+tower-http = {version = "0.3.4", features = ["cors"]}
 tracing-subscriber = {version = "0.3.15", features = ["env-filter"]}
 serde = {version = "1.0.143", features = ["derive"]}
 serde_json = "1.0.83"
