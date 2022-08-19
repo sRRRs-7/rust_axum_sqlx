@@ -38,6 +38,7 @@ pub async fn create_repo() -> RepoImpls {
     )
 }
 
+// use usecase, handler
 pub trait Repositories {
     type UserRepo: UserRepoTrait;
     type CategoryRepo: CategoryRepoTrait;

@@ -35,5 +35,5 @@ pub struct ProfImg {
 
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 pub struct ImgUrl {
-    img_url: String,
+    pub img_url: String,
 }

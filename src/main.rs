@@ -6,6 +6,7 @@ mod models;
 mod repository;
 mod router;
 mod services;
+mod usecase;
 mod tests;
 
 
