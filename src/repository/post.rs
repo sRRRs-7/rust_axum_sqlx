@@ -1,7 +1,6 @@
 use crate::db::Db;
 use crate::models::post::{Post, PostList, NewPost, PostId};
 use crate::error::Result;
-use anyhow::Context;
 use async_trait::async_trait;
 use mockall::automock;
 
@@ -28,7 +27,7 @@ impl PostRepoTrait for PostRepo {
         let row = sqlx::query_as::<_, Post>("SELECT * FROM posts")
             .fetch_all(&*self.pool)
             .await
-            .context("DB Query Error (find all posts)")?;
+            .unwrap();
 
         Ok(row)
     }
@@ -38,7 +37,7 @@ impl PostRepoTrait for PostRepo {
             .bind(post_id)
             .fetch_one(&*self.pool)
             .await
-            .context("DB Query Error (find one posts)")?;
+            .unwrap();
 
         Ok(row)
     }
@@ -51,13 +50,13 @@ impl PostRepoTrait for PostRepo {
                 RETURNING *;
             "#,
         )
-        .bind(body.user_id)
-        .bind(body.category_id)
-        .bind(body.title)
-        .bind(body.content)
+        .bind(&body.user_id)
+        .bind(&body.category_id)
+        .bind(&body.title)
+        .bind(&body.content)
         .fetch_one(&*self.pool)
         .await
-        .context("DB Query Error (add posts)")?;
+        .unwrap();
 
         Ok(row)
     }

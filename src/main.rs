@@ -1,3 +1,5 @@
+use std::net::{SocketAddr, IpAddr, Ipv4Addr};
+
 mod cors;
 mod db;
 mod error;
@@ -7,9 +9,19 @@ mod repository;
 mod router;
 mod services;
 mod usecase;
+#[cfg(test)]
 mod tests;
 
 
-fn main() {
-    println!("Hello, world!");
+#[tokio::main]
+async fn main() {
+    tracing_subscriber::fmt::init();
+    let addr = SocketAddr::from(([127,0,0,1], 7878));
+    tracing::debug!("listening on {}", addr);
+
+    let app = cors::create_app().await;
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
 }

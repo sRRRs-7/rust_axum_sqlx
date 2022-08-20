@@ -10,7 +10,7 @@ use tower_http::cors::{Any, CorsLayer, AllowOrigin};
 
 
 pub fn cors() -> CorsLayer {
-    let swagger_url = "http://localhost::7878";
+    let swagger_url = "http://127.0.0.0::7878";
     CorsLayer::new()
         .allow_origin(AllowOrigin::exact(swagger_url.parse().unwrap()))
         .allow_methods(Any)
@@ -22,6 +22,6 @@ pub async fn create_app() -> Router {
     let repositories = Arc::new(create_repo().await);
     router()
         .layer(cors())
-        .layer(Extension(repositories))     // data state
+        .layer(Extension(repositories))     // between router sharing state instance
 }
 

@@ -1,5 +1,4 @@
 use crate::db;
-use crate::models::user::User;
 use crate::repository::{
     user::{UserRepo, UserRepoTrait},
     category::{CategoryRepo, CategoryRepoTrait},
@@ -38,7 +37,7 @@ pub async fn create_repo() -> RepoImpls {
     )
 }
 
-// use usecase, handler
+
 pub trait Repositories {
     type UserRepo: UserRepoTrait;
     type CategoryRepo: CategoryRepoTrait;

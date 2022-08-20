@@ -1,7 +1,6 @@
 use crate::db::Db;
 use crate::error::Result;
 use crate::models::user::{User, NewUser, UserCondition, UserId, UserList};
-use anyhow::Context;
 use async_trait::async_trait;
 use mockall::automock;
 
@@ -33,7 +32,7 @@ impl UserRepoTrait for UserRepo {
         let result = query
             .fetch_all(&*self.pool)
             .await
-            .context("DB Query Error (find all users)")?;
+            .unwrap();
 
         Ok(result)
     }
@@ -43,7 +42,7 @@ impl UserRepoTrait for UserRepo {
             .bind(user_id)
             .fetch_one(&*self.pool)
             .await
-            .context("DB Query Error (find one users)")?;
+            .unwrap();
 
             Ok(row)
     }
@@ -61,9 +60,8 @@ impl UserRepoTrait for UserRepo {
         .bind(&body.age)
         .fetch_one(&*self.pool)
         .await
-        .context("DB Query Error (add users)")?;
+        .unwrap();
 
         Ok(row)
     }
-
 }

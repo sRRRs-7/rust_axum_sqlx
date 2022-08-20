@@ -6,7 +6,7 @@ pub struct User {
     pub id: i32,
     pub name: String,
     pub msg: Option<String>,
-    pub age: Option<i8>,
+    pub age: Option<i16>,
 }
 pub type UserList = Vec<User>;
 
@@ -14,7 +14,7 @@ pub type UserList = Vec<User>;
 pub struct NewUser {
     pub name: String,
     pub msg: Option<String>,
-    pub age: Option<i8>,
+    pub age: Option<i16>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

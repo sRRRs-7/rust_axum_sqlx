@@ -9,8 +9,8 @@ pub fn router() -> Router {
     Router::new()
         .route("/", get(root))
         .nest("/users", user_routes())
-        .nest("/categories", user_routes())
-        .nest("/posts", user_routes())
+        .nest("/categories", category_routes())
+        .nest("/posts", post_routes())
 }
 
 
