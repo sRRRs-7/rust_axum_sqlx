@@ -7,6 +7,7 @@ pub struct User {
     pub name: String,
     pub msg: Option<String>,
     pub age: Option<i16>,
+    pub image: Option<String>,
 }
 pub type UserList = Vec<User>;
 
@@ -15,6 +16,7 @@ pub struct NewUser {
     pub name: String,
     pub msg: Option<String>,
     pub age: Option<i16>,
+    pub image: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -30,10 +32,10 @@ pub struct UserId {
 #[derive(Serialize)]
 pub struct ProfImg {
     pub user_id: i32,
-    pub img: Vec<u8>,
+    pub image: Vec<u8>,
 }
 
 #[derive(Serialize, Deserialize, Debug, FromRow)]
 pub struct ImgUrl {
-    pub img_url: String,
+    pub image: String,
 }

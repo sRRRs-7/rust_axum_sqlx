@@ -1,5 +1,5 @@
 use crate::error::{AppError, Result};
-use crate::models::user::{User, NewUser, UserCondition, UserId, UserList};
+use crate::models::user::{User, NewUser, UserCondition, UserId, UserList, ImgUrl};
 use crate::repository::RepoExt;
 use crate::services;
 use crate::usecase;
@@ -28,6 +28,16 @@ pub async fn detail(
 }
 
 
+pub async fn add_image(
+    Path(user_id): Path<i32>,
+    Json(img): Json<ImgUrl>,
+    Extension(repo): RepoExt,
+) -> Result<Json<UserId>> {
+    let user_id = usecase::user::add_image(repo.clone(), user_id, img).await?;
+    Ok(Json(user_id))
+}
+
+
 pub async fn add(
     Json(new_user): Json<NewUser>,
     Extension(repo): RepoExt,
@@ -50,18 +60,26 @@ pub async fn edit(
 pub async fn edit_img(
     ContentLengthLimit(multipart): ContentLengthLimit<Multipart, {5 * 1024 * 1024}>,
     Extension(repo): RepoExt,
-) -> Result<Json<User>> {
+) -> Result<Json<UserId>> {
     let result = _multipart_edit_img(multipart).await;
     if let Err(e) = result {
         return Err(AppError::MultipartError(e.to_string()));
     }
 
     let (user_id, img) = result.unwrap();
-    let result = services::img_upload::img_upload(img, "./static");
+    let (result, file_name) = services::img_upload::img_upload(img.clone(), "./static");
 
     println!("user_id: {}, upload img: {:?}", user_id, result);
 
-    let user = usecase::user::get(repo.clone(), user_id).await?;
+    let get_user = usecase::user::get(repo.clone(), user_id).await?;
+    // let file = ImageReader::open(format!("static/{}", file_name)).unwrap().decode().unwrap();
+    let user = usecase::user::edit(repo.clone(), user_id, NewUser {
+        name: get_user.name,
+        msg: get_user.msg,
+        age: get_user.age,
+        image: Some(format!("static/{}", file_name)),
+    }).await?;
+
     Ok(Json(user))
 }
 

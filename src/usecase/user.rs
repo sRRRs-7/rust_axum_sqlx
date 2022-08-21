@@ -1,5 +1,5 @@
 use crate::error::Result;
-use crate::models::user::{User, NewUser, UserCondition, UserId, UserList, ProfImg, ImgUrl};
+use crate::models::user::{User, NewUser, UserCondition, UserId, UserList, ImgUrl};
 use crate::repository::{user::UserRepoTrait, Repositories};
 use std::sync::Arc;
 
@@ -30,6 +30,16 @@ pub async fn add<R: Repositories>(
 }
 
 
+pub async fn add_image<R: Repositories>(
+    repo: Arc<R>,
+    user_id: i32,
+    img: ImgUrl,
+) -> Result<UserId> {
+    let user_id = repo.user().add_image(user_id, &img).await?;
+    Ok(user_id)
+}
+
+
 pub async fn edit<R: Repositories>(
     repo: Arc<R>,
     user_id: i32,
@@ -37,16 +47,6 @@ pub async fn edit<R: Repositories>(
 ) -> Result<UserId> {
     let user_id = repo.user().edit(user_id, &new_user).await?;
     Ok(user_id)
-}
-
-
-pub async fn edit_img<R: Repositories>(
-    _repo: Arc<R>,
-    _prof_img: &ProfImg,
-) -> Result<ImgUrl> {
-    Ok(ImgUrl {
-        img_url: String::from("https://example.com/img.png"),
-    })
 }
 
 

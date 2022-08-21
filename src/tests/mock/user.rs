@@ -7,6 +7,7 @@ pub fn user_mock(id: usize) -> User {
         name: String::from("daniel"),
         msg: Some(String::from("I love coffee")),
         age: Some(26),
+        image: Some(String::from("image")),
     }
 }
 

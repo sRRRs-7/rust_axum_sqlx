@@ -5,7 +5,7 @@ CREATE TABLE "users" (
     "name" VARCHAR(50) NOT NULL,
     "msg" VARCHAR(200) NOT NULL,
     "age" SMALLINT NOT NULL,
-    "image" BYTEA
+    "image" TEXT
 );
 
 CREATE TABLE "categories" (

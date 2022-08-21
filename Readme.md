@@ -89,4 +89,5 @@
   curl -v -X DELETE http://127.0.0.1:7878/posts/delete/1
 
 - multipart/form-data
-  curl -v -X POST -F img=@/Users/srrrs/Desktop/Image/golang.png -F user_id=1 http://127.0.0.1:7878/users/edit/image
+  curl -v -X PUT -F img=@/Users/srrrs/Desktop/Image/golang.png -F user_id=1 http://127.0.0.1:7878/users/edit/image
+  curl -v -X PUT http://127.0.0.1:7878/users/add/image/1 -d '{"image":"static/example.png"}' -H 'Content-type:application/json'

@@ -19,7 +19,8 @@ fn user_routes() -> Router {
         .route("/", get(users::list))
         .route("/detail/:user_id", get(users::detail))
         .route("/add", post(users::add))
-        .route("/edit/image", post(users::edit_img))
+        .route("/add/image/:user_id", put(users::add_image))
+        .route("/edit/image", put(users::edit_img))
         .route("/edit/:user_id", put(users::edit))
         .route("/delete", delete(users::delete))
 }

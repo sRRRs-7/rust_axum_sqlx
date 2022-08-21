@@ -6,10 +6,10 @@ use std::io::Cursor;
 use uuid::Uuid;
 
 
-pub fn img_upload(img_bytes: Vec<u8>, save_path: &'static str) -> Result<()> {
+pub fn img_upload(img_bytes: Vec<u8>, save_path: &'static str) -> (Result<()>, String) {
     let orientation = get_orientation(&img_bytes);
     println!("orientation: {}", orientation);
-    let (format, ext) = get_format_and_ext(&img_bytes)?;
+    let (format, ext) = get_format_and_ext(&img_bytes).unwrap();
     let file_name = create_file_name(&ext);
 
     match image::load_from_memory_with_format(&img_bytes, format) {
@@ -19,10 +19,10 @@ pub fn img_upload(img_bytes: Vec<u8>, save_path: &'static str) -> Result<()> {
             let mut output = File::create(format!("{}/{}", save_path, file_name)).unwrap();
             new_img.write_to(&mut output, format).unwrap();
         },
-        Err(_) => return Err(AppError::InvalidFileFormat),
+        Err(_) => return (Err(AppError::InvalidFileFormat), String::from("Invalid file format")),
     };
 
-    Ok(())
+    (Ok(()), file_name)
 }
 
 

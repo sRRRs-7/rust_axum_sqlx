@@ -1,6 +1,6 @@
 use crate::db::Db;
 use crate::error::Result;
-use crate::models::user::{User, NewUser, UserCondition, UserId, UserList};
+use crate::models::user::{User, NewUser, UserCondition, UserId, UserList, ImgUrl};
 use async_trait::async_trait;
 use mockall::automock;
 
@@ -19,6 +19,7 @@ pub trait UserRepoTrait {
     async fn find_all(&self, conditions: &UserCondition) -> Result<UserList>;
     async fn find_by_id(&self, user_id: i32) -> Result<User>;
     async fn add(&self, body: &NewUser) -> Result<UserId>;
+    async fn add_image(&self, user_id: i32, img: &ImgUrl) -> Result<UserId>;
     async fn edit(&self, user_id: i32, body: &NewUser) -> Result<UserId>;
     async fn delete(&self, user_id: i32) -> Result<String>;
 }
@@ -52,14 +53,15 @@ impl UserRepoTrait for UserRepo {
     async fn add(&self, body: &NewUser) -> Result<UserId> {
         let row = sqlx::query_as::<_, UserId>(
             r#"
-                INSERT INTO users (name, msg ,age)
-                VALUES ($1, $2, $3)
+                INSERT INTO users (name, msg ,age, image)
+                VALUES ($1, $2, $3, $4)
                 RETURNING id;
             "#,
         )
         .bind(&body.name)
         .bind(&body.msg)
         .bind(&body.age)
+        .bind(&body.image)
         .fetch_one(&*self.pool)
         .await
         .unwrap();
@@ -68,11 +70,30 @@ impl UserRepoTrait for UserRepo {
     }
 
 
+    async fn add_image(&self, user_id: i32, img: &ImgUrl) -> Result<UserId> {
+        let user_id = sqlx::query_as::<_, UserId>(
+            r#"
+                UPDATE users
+                SET image = $2
+                WHERE id = $1
+                RETURNING id;
+            "#,
+        )
+        .bind(user_id)
+        .bind(&img.image)
+        .fetch_one(&*self.pool)
+        .await
+        .unwrap();
+
+        Ok(user_id)
+    }
+
+
     async fn edit(&self, user_id: i32, body: &NewUser) -> Result<UserId> {
         let row = sqlx::query_as::<_, UserId>(
             r#"
-            UPDATE posts
-            SET name = $2, msg = $3, age = $4
+            UPDATE users
+            SET name = $2, msg = $3, age = $4, image = $5
             WHERE id = $1
             RETURNING id;
             "#,
@@ -81,6 +102,7 @@ impl UserRepoTrait for UserRepo {
         .bind(&body.name)
         .bind(&body.msg)
         .bind(&body.age)
+        .bind(&body.image)
         .fetch_one(&*self.pool)
         .await
         .unwrap();
