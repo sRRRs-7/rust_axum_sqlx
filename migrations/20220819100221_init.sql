@@ -4,7 +4,8 @@ CREATE TABLE "users" (
     "id" SERIAL PRIMARY KEY,
     "name" VARCHAR(50) NOT NULL,
     "msg" VARCHAR(200) NOT NULL,
-    "age" SMALLINT NOT NULL
+    "age" SMALLINT NOT NULL,
+    "image" BYTEA
 );
 
 CREATE TABLE "categories" (

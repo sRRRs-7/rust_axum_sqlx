@@ -6,7 +6,7 @@ pub fn mock_post(id: usize) -> Post {
         id: id as i32,
         user_id: 1,
         category_id: 1,
-        title: String::from("I am Rust developer"),
+        titles: String::from("I am Rust developer"),
         content: String::from("ownership & borrow"),
     }
 }

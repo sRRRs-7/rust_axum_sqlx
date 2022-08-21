@@ -19,6 +19,8 @@ pub trait CategoryRepoTrait {
      async fn find_all(&self, conditions: &CategoryCondition) -> Result<CategoryList>;
      async fn find_by_id(&self, category_id: i32) -> Result<Category>;
      async fn add(&self, body: &NewCategory) -> Result<Category>;
+     async fn edit(&self, category_id: i32, body: &NewCategory) -> Result<Category>;
+     async fn delete(&self, category_id: i32) -> Result<String>;
 }
 
 #[async_trait]
@@ -39,7 +41,7 @@ impl CategoryRepoTrait for CategoryRepo {
     }
 
     async fn find_by_id(&self, category_id: i32) -> Result<Category> {
-        let row = sqlx::query_as:: <_, Category>("SELECT * FROM category WHERE category = $1")
+        let row = sqlx::query_as:: <_, Category>("SELECT * FROM categories WHERE id = $1")
             .bind(category_id)
             .fetch_one(&*self.pool)
             .await
@@ -52,7 +54,7 @@ impl CategoryRepoTrait for CategoryRepo {
         let row = sqlx::query_as::<_, Category>(
             r#"
                 INSERT INTO categories (category)
-                VALUE ($1)
+                VALUES ($1)
                 RETURNING *;
             "#,
         )
@@ -62,5 +64,35 @@ impl CategoryRepoTrait for CategoryRepo {
         .unwrap();
 
         Ok(row)
+    }
+
+
+    async fn edit(&self, category_id: i32, new_category: &NewCategory) -> Result<Category> {
+        let row = sqlx::query_as::<_, Category>(
+            r#"
+                UPDATE categories
+                SET category = $2
+                WHERE id = $1
+                RETURNING *
+            "#,
+        )
+        .bind(category_id)
+        .bind(&new_category.category)
+        .fetch_one(&*self.pool)
+        .await
+        .unwrap();
+
+        Ok(row)
+    }
+
+
+    async fn delete(&self, category_id: i32) -> Result<String> {
+        sqlx::query("DELETE FROM categories WHERE id = $1")
+            .bind(category_id)
+            .execute(&*self.pool)
+            .await
+            .unwrap();
+
+        Ok(format!("Delete category {}", category_id))
     }
 }

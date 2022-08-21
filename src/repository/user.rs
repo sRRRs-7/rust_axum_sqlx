@@ -19,6 +19,8 @@ pub trait UserRepoTrait {
     async fn find_all(&self, conditions: &UserCondition) -> Result<UserList>;
     async fn find_by_id(&self, user_id: i32) -> Result<User>;
     async fn add(&self, body: &NewUser) -> Result<UserId>;
+    async fn edit(&self, user_id: i32, body: &NewUser) -> Result<UserId>;
+    async fn delete(&self, user_id: i32) -> Result<String>;
 }
 
 #[async_trait]
@@ -63,5 +65,36 @@ impl UserRepoTrait for UserRepo {
         .unwrap();
 
         Ok(row)
+    }
+
+
+    async fn edit(&self, user_id: i32, body: &NewUser) -> Result<UserId> {
+        let row = sqlx::query_as::<_, UserId>(
+            r#"
+            UPDATE posts
+            SET name = $2, msg = $3, age = $4
+            WHERE id = $1
+            RETURNING id;
+            "#,
+        )
+        .bind(user_id)
+        .bind(&body.name)
+        .bind(&body.msg)
+        .bind(&body.age)
+        .fetch_one(&*self.pool)
+        .await
+        .unwrap();
+
+        Ok(row)
+    }
+
+
+    async fn delete(&self, user_id: i32) -> Result<String> {
+        sqlx::query("DELETE FROM posts WHERE id = $1")
+            .execute(&*self.pool)
+            .await
+            .unwrap();
+
+        Ok(format!("Delete user {}", user_id))
     }
 }

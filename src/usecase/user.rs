@@ -30,6 +30,16 @@ pub async fn add<R: Repositories>(
 }
 
 
+pub async fn edit<R: Repositories>(
+    repo: Arc<R>,
+    user_id: i32,
+    new_user: NewUser,
+) -> Result<UserId> {
+    let user_id = repo.user().edit(user_id, &new_user).await?;
+    Ok(user_id)
+}
+
+
 pub async fn edit_img<R: Repositories>(
     _repo: Arc<R>,
     _prof_img: &ProfImg,
@@ -37,6 +47,15 @@ pub async fn edit_img<R: Repositories>(
     Ok(ImgUrl {
         img_url: String::from("https://example.com/img.png"),
     })
+}
+
+
+pub async fn delete<R: Repositories>(
+    repo: Arc<R>,
+    user_id: i32,
+) -> Result<String> {
+    let res = repo.user().delete(user_id).await?;
+    Ok(res)
 }
 
 

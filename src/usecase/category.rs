@@ -3,7 +3,7 @@ use crate::models::category::{Category, NewCategory, CategoryCondition, Category
 use crate::repository::{category::CategoryRepoTrait, Repositories};
 use std::sync::Arc;
 
-pub async fn get_all<R: Repositories>(
+pub async fn get_all <R: Repositories>(
         repo: Arc<R>,
         conditions: &CategoryCondition,
 ) -> Result<CategoryList> {
@@ -12,7 +12,7 @@ pub async fn get_all<R: Repositories>(
 }
 
 
-pub async fn get<R: Repositories>(
+pub async fn get <R: Repositories>(
     repo: Arc<R>,
     user_id: i32,
 ) -> Result<Category> {
@@ -21,12 +21,31 @@ pub async fn get<R: Repositories>(
 }
 
 
-pub async fn add<R: Repositories>(
+pub async fn add <R: Repositories>(
     repo: Arc<R>,
     new_user: NewCategory,
 ) -> Result<Category> {
     let user_id = repo.category().add(&new_user).await?;
     Ok(user_id)
+}
+
+
+pub async fn edit <R: Repositories>(
+    repo: Arc<R>,
+    category_id: i32,
+    new_category: NewCategory,
+) -> Result<Category> {
+    let category = repo.category().edit(category_id, &new_category).await?;
+    Ok(category)
+}
+
+
+pub async fn delete <R: Repositories>(
+    repo: Arc<R>,
+    category_id: i32,
+) -> Result<String> {
+    let res = repo.category().delete(category_id).await?;
+    Ok(res)
 }
 
 #[cfg(test)]

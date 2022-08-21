@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/srrrs/App/Rust/app/axum'
+docker run --name axum_server -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:14-alpine
+make: Leaving directory `/Users/srrrs/App/Rust/app/axum'
+ 
