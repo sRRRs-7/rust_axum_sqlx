@@ -1,7 +1,7 @@
 use crate::error::{AppError, Result};
 use crate::models::user::{User, NewUser, UserCondition, UserId, UserList};
 use crate::repository::RepoExt;
-use crate::services::img_upload::img_upload;
+use crate::services;
 use crate::usecase;
 use anyhow::anyhow;
 use axum::{
@@ -57,7 +57,7 @@ pub async fn edit_img(
     }
 
     let (user_id, img) = result.unwrap();
-    let result = img_upload(img, "/");
+    let result = services::img_upload::img_upload(img, "./static");
 
     println!("user_id: {}, upload img: {:?}", user_id, result);
 
@@ -74,12 +74,10 @@ async fn _multipart_edit_img(mut multipart: Multipart) -> Result<(i32, Vec<u8>),
         let name = field.name().unwrap_or("").to_string();
         let data: Vec<u8> = field.bytes().await?.into_iter().collect();
 
-        println!("name: {}, data: {:?}", name, data);
-
         match &*name {
             "user_id" => user_id = Some(std::str::from_utf8(&data)?.parse()?),
             "img" => img = data,
-            _ => return Err(anyhow!("Invalid parameter")),
+            _ => return Err(anyhow!("Invalid parameter error")),
         }
     }
     Ok((user_id.unwrap(), img))

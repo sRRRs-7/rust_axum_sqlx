@@ -16,7 +16,7 @@ pub fn img_upload(img_bytes: Vec<u8>, save_path: &'static str) -> Result<()> {
         Ok(img) => {
             let mut new_img = img.thumbnail(300, 300);
             new_img = img_rotate(new_img, orientation);
-            let mut output = File::create(file_name).unwrap();
+            let mut output = File::create(format!("{}/{}", save_path, file_name)).unwrap();
             new_img.write_to(&mut output, format).unwrap();
         },
         Err(_) => return Err(AppError::InvalidFileFormat),

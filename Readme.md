@@ -53,21 +53,19 @@
   middleware
   authentication
 
-  - flow structure
-  - main
-    - cors
-    - server setup
-  - router
-    - req receive
-  - handler -> response format json
-    - usecase -> implement & test
-    - repository -> methods define & collect
-    - sql -> DB query
-    - db -> connect
+- main
+  cors
+  server setup
+- router
+  req receive
+- handler -> response format json
+  usecase -> implement & test
+  repository -> methods define & collect
+  sql -> DB query
+  db -> connect
 
 - curl request
   curl -v -X POST http://127.0.0.1:7878/users/add -d '{"name":"Rustan", "msg":"Rust","age":26}' -H 'content-type:application/json'
-  curl -v -X POST -F file=@/Users/srrrs/Desktop/Image/golang.png http://127.0.0.1:7878/users/edit/image
   curl -v -X POST http://127.0.0.1:7878/categories/add -d '{"category":"cate"}' -H 'content-type:application/json'
   curl -v -X POST http://127.0.0.1:7878/posts/add -d '{"user_id":1, "category_id":1, "titles":"new titles", "content":"new content"}' -H 'content-type:application/json'
 
@@ -91,4 +89,4 @@
   curl -v -X DELETE http://127.0.0.1:7878/posts/delete/1
 
 - multipart/form-data
-  curl -X POST -F file1=@/var/tmp/example.png http://127.0.0.1:7878/users/add
+  curl -v -X POST -F img=@/Users/srrrs/Desktop/Image/golang.png -F user_id=1 http://127.0.0.1:7878/users/edit/image
